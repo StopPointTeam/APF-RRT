@@ -13,7 +13,7 @@ if __name__ == '__main__':
     vision = Vision()
     action = Action()
     debugger = Debugger()
-    collision = Collision()
+    collision = Collision(vision)
 
     time.sleep(0.1)  # 防止未连接上仿真环境
 
@@ -33,13 +33,7 @@ if __name__ == '__main__':
             line_x2, line_y2 = waypoint_list[i + 1]
 
             # 检测是否发生碰撞
-            is_collision = False
-            for bot in vision.yellow_robot:
-                if collision.is_collision(line_x1, line_y1, line_x2, line_y2, bot.x, bot.y) == True:
-                    is_collision = True
-                    break
-
-            if is_collision == False:
+            if collision.is_collided_check_all(line_x1, line_y1, line_x2, line_y2) == False:
                 debugger.draw_line(package, line_x1, line_y1,
                                    line_x2, line_y2, Debug_Msg.GREEN)
             else:

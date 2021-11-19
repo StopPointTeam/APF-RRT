@@ -1,6 +1,4 @@
-from typing import List
 from vision import Vision
-from zss_debug_pb2 import Debug_Msgs
 
 
 class APF:
