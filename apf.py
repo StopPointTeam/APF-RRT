@@ -37,8 +37,8 @@ class APF:
 
         for i in range(400):
             # 计算目标点带来的吸引力
-            distance = pow(pow(-2400 - self.current_x, 2) +
-                           pow(-1500 - self.current_y, 2), 1 / 2)
+            distance = self._point_distance(
+                self.current_x, self.current_y, -2400, -1500)
             if (distance > 500):
                 dest_force_x = self.alpha * (-2400 - self.current_x)
                 dest_force_y = self.alpha * (-1500 - self.current_y)
@@ -53,14 +53,13 @@ class APF:
             obs_force_y = 0
 
             for bot in self.robot:
-                distance = pow(pow(self.current_x - bot.x, 2) +
-                               pow(self.current_y - bot.y, 2), 1 / 2)
+                distance = self._point_distance(
+                    self.current_x, self.current_y, bot.x, bot.y)
 
                 if distance > 2000:
                     continue
 
-                start_distance = pow(pow(bot.x - 2400, 2) +
-                                     pow(bot.x - 1500, 2), 1 / 2)
+                start_distance = self._point_distance(bot.x, bot.y, 2400, 1500)
 
                 if distance < 1000 and start_distance < 800:
                     obs_force_x += 5 * self.beta * \
@@ -93,3 +92,6 @@ class APF:
 
         # 400 步还未到达，直接连接
         self.waypoint_list.append((-2400, -1500))
+
+    def _point_distance(self, x1: float, y1: float, x2: float, y2: float):
+        return pow(pow(x2 - x1, 2) + pow(y2 - y1, 2), 1 / 2)
