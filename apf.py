@@ -41,10 +41,10 @@ class APF:
             # 计算目标点带来的吸引力
             distance = self._point_distance(
                 self.current_x, self.current_y, dest_x, dest_y)
-            if (distance > 500):
+            if distance > 500:
                 dest_force_x = self.alpha * (dest_x - self.current_x)
                 dest_force_y = self.alpha * (dest_y - self.current_y)
-            elif (distance > 100):  # 当距离目标较近时，增加吸引力，防止无法到达目标
+            elif distance > 100:  # 当距离目标较近时，增加吸引力，防止无法到达目标
                 dest_force_x = 10 * self.alpha * (dest_x - self.current_x)
                 dest_force_y = 10 * self.alpha * (dest_y - self.current_y)
             else:  # 完成
@@ -80,8 +80,8 @@ class APF:
             force_y = dest_force_y + obs_force_y
 
             # 限制合力大小
-            if (force_x > self.force_limit or force_y > self.force_limit):
-                if (force_x <= force_y):
+            if force_x > self.force_limit or force_y > self.force_limit:
+                if force_x <= force_y:
                     force_x = force_x / force_y * self.force_limit
                     force_y = self.force_limit
                 else:

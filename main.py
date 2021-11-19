@@ -17,7 +17,7 @@ if __name__ == '__main__':
 
     time.sleep(0.1)  # 防止未连接上仿真环境
 
-    while (True):
+    while True:
         planner = APF(vision)
         planner.set_para(time_limit=200)
 
@@ -27,21 +27,24 @@ if __name__ == '__main__':
         package = Debug_Msgs()
         debugger.draw_circle(package, 2400, 1500, 100)  # 绘制起点
         debugger.draw_circle(package, -2400, -1500, 100)  # 绘制终点
+
         for i in range(len(waypoint_list) - 1):  # 绘制路径
+            line_x1, line_y1 = waypoint_list[i]
+            line_x2, line_y2 = waypoint_list[i + 1]
 
             # 检测是否发生碰撞
             is_collision = False
             for bot in vision.yellow_robot:
-                if (collision.is_collision(waypoint_list[i][0], waypoint_list[i][1], waypoint_list[i + 1][0], waypoint_list[i + 1][1], bot.x, bot.y) == True):
+                if collision.is_collision(line_x1, line_y1, line_x2, line_y2, bot.x, bot.y) == True:
                     is_collision = True
                     break
 
-            if (is_collision == False):
-                debugger.draw_line(package, waypoint_list[i][0], waypoint_list[i][1],
-                                   waypoint_list[i + 1][0], waypoint_list[i + 1][1], Debug_Msg.GREEN)
+            if is_collision == False:
+                debugger.draw_line(package, line_x1, line_y1,
+                                   line_x2, line_y2, Debug_Msg.GREEN)
             else:
-                debugger.draw_line(package, waypoint_list[i][0], waypoint_list[i][1],
-                                   waypoint_list[i + 1][0], waypoint_list[i + 1][1], Debug_Msg.RED)  # 将发生碰撞的线段标为红色
+                debugger.draw_line(package, line_x1, line_y1,
+                                   line_x2, line_y2, Debug_Msg.RED)  # 将发生碰撞的线段标为红色
 
         debugger.send(package)
 
