@@ -7,24 +7,25 @@ from apf import APF
 
 import time
 
+
 if __name__ == '__main__':
     vision = Vision()
     action = Action()
     debugger = Debugger()
 
-    time.sleep(0.1)
+    time.sleep(0.1)  # 防止未连接上仿真环境
 
     while (True):
         planner = APF(vision)
-        planner.set_para(beta=100000000000, step=0.1)
+        planner.set_para(time_limit=200)
 
-        planner.plan()
-        waypoint_list = planner.get_waypoint_list()
+        # 规划路径
+        waypoint_list = planner.plan(-2400, -1500)
 
         package = Debug_Msgs()
-        debugger.draw_circle(package, 2400, 1500, 100)
-        debugger.draw_circle(package, -2400, -1500, 100)
-        for i in range(len(waypoint_list) - 1):
+        debugger.draw_circle(package, 2400, 1500, 100)  # 绘制起点
+        debugger.draw_circle(package, -2400, -1500, 100)  # 绘制终点
+        for i in range(len(waypoint_list) - 1):  # 绘制路径
             debugger.draw_line(
                 package, waypoint_list[i][0], waypoint_list[i][1], waypoint_list[i + 1][0], waypoint_list[i + 1][1])
 
