@@ -12,22 +12,23 @@ if __name__ == '__main__':
     action = Action()
     debugger = Debugger()
 
-    time.sleep(1)
+    time.sleep(0.1)
 
-    planner = APF(vision)
-    planner.set_para(beta=100000000000, step=0.1)
+    while (True):
+        planner = APF(vision)
+        planner.set_para(beta=100000000000, step=0.1)
 
-    planner.plan()
-    waypoint_list = planner.get_waypoint_list()
+        planner.plan()
+        waypoint_list = planner.get_waypoint_list()
 
-    package = Debug_Msgs()
-    debugger.draw_circle(package, 2400, 1500, 100)
-    debugger.draw_circle(package, -2400, -1500, 100)
-    for i in range(len(waypoint_list) - 1):
-        debugger.draw_line(
-            package, waypoint_list[i][0], waypoint_list[i][1], waypoint_list[i + 1][0], waypoint_list[i + 1][1])
+        package = Debug_Msgs()
+        debugger.draw_circle(package, 2400, 1500, 100)
+        debugger.draw_circle(package, -2400, -1500, 100)
+        for i in range(len(waypoint_list) - 1):
+            debugger.draw_line(
+                package, waypoint_list[i][0], waypoint_list[i][1], waypoint_list[i + 1][0], waypoint_list[i + 1][1])
 
-    debugger.send(package)
+        debugger.send(package)
 
     # while True:
     #     # 1. path planning & velocity planning

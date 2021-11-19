@@ -59,10 +59,19 @@ class APF:
                 if distance > 2000:
                     continue
 
-                obs_force_x += self.beta * \
-                    (self.current_x - bot.x) / pow(distance, 4)
-                obs_force_y += self.beta * \
-                    (self.current_y - bot.y) / pow(distance, 4)
+                start_distance = pow(pow(bot.x - 2400, 2) +
+                                     pow(bot.x - 1500, 2), 1 / 2)
+
+                if distance < 1000 and start_distance < 800:
+                    obs_force_x += 5 * self.beta * \
+                        (self.current_x - bot.x) / pow(distance, 4)
+                    obs_force_y += 5 * self.beta * \
+                        (self.current_y - bot.y) / pow(distance, 4)
+                else:
+                    obs_force_x += self.beta * \
+                        (self.current_x - bot.x) / pow(distance, 4)
+                    obs_force_y += self.beta * \
+                        (self.current_y - bot.y) / pow(distance, 4)
 
             # 计算合力
             force_x = dest_force_x + obs_force_x
