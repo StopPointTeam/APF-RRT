@@ -15,7 +15,7 @@ if __name__ == '__main__':
     time.sleep(1)
 
     planner = APF(vision)
-    planner.set_para(beta=100000000000, step=200)
+    planner.set_para(beta=100000000000, step=0.1)
 
     planner.plan()
     waypoint_list = planner.get_waypoint_list()
