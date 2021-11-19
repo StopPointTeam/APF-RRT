@@ -10,10 +10,10 @@ class Debugger(object):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.debug_address = ('localhost', 20001)
 
-    def draw_circle(self, package, x, y, radius=300):
+    def draw_circle(self, package, x, y, radius=300, color=Debug_Msg.WHITE):
         msg = package.msgs.add()
         msg.type = Debug_Msg.ARC
-        msg.color = Debug_Msg.WHITE
+        msg.color = color
         arc = msg.arc
         arc.rectangle.point1.x = x - radius
         arc.rectangle.point1.y = y - radius
@@ -23,10 +23,10 @@ class Debugger(object):
         arc.end = 360
         arc.FILL = True
 
-    def draw_line(self, package, x1, y1, x2, y2):
+    def draw_line(self, package, x1, y1, x2, y2, color=Debug_Msg.WHITE):
         msg = package.msgs.add()
         msg.type = Debug_Msg.LINE
-        msg.color = Debug_Msg.WHITE
+        msg.color = color
         line = msg.line
         line.start.x = x1
         line.start.y = y1
@@ -35,11 +35,11 @@ class Debugger(object):
         line.FORWARD = True
         line.BACK = True
 
-    def draw_lines(self, package, x1, y1, x2, y2):
+    def draw_lines(self, package, x1, y1, x2, y2, color=Debug_Msg.WHITE):
         for i in range(len(x1)):
             msg = package.msgs.add()
             msg.type = Debug_Msg.LINE
-            msg.color = Debug_Msg.WHITE
+            msg.color = color
             line = msg.line
             line.start.x = x1[i]
             line.start.y = y1[i]
@@ -48,11 +48,11 @@ class Debugger(object):
             line.FORWARD = True
             line.BACK = True
 
-    def draw_point(self, package, x, y):
+    def draw_point(self, package, x, y, color=Debug_Msg.WHITE):
         msg = package.msgs.add()
         # line 1
         msg.type = Debug_Msg.LINE
-        msg.color = Debug_Msg.WHITE
+        msg.color = color
         line = msg.line
         line.start.x = x + 50
         line.start.y = y + 50
@@ -63,7 +63,7 @@ class Debugger(object):
         # line 2
         msg = package.msgs.add()
         msg.type = Debug_Msg.LINE
-        msg.color = Debug_Msg.WHITE
+        msg.color = color
         line = msg.line
         line.start.x = x - 50
         line.start.y = y + 50
@@ -72,12 +72,12 @@ class Debugger(object):
         line.FORWARD = True
         line.BACK = True
 
-    def draw_points(self, package, x, y):
+    def draw_points(self, package, x, y, color=Debug_Msg.WHITE):
         for i in range(len(x)):
             # line 1
             msg = package.msgs.add()
             msg.type = Debug_Msg.LINE
-            msg.color = Debug_Msg.WHITE
+            msg.color = color
             line = msg.line
             line.start.x = x[i] + 50
             line.start.y = y[i] + 50
@@ -88,7 +88,7 @@ class Debugger(object):
             # line 2
             msg = package.msgs.add()
             msg.type = Debug_Msg.LINE
-            msg.color = Debug_Msg.WHITE
+            msg.color = color
             line = msg.line
             line.start.x = x[i] - 50
             line.start.y = y[i] + 50

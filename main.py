@@ -1,7 +1,7 @@
 from vision import Vision
 from action import Action
 from debug import Debugger
-from zss_debug_pb2 import Debug_Msgs
+from zss_debug_pb2 import Debug_Msgs, Debug_Msg
 
 from apf import APF
 
@@ -26,8 +26,8 @@ if __name__ == '__main__':
         debugger.draw_circle(package, 2400, 1500, 100)  # 绘制起点
         debugger.draw_circle(package, -2400, -1500, 100)  # 绘制终点
         for i in range(len(waypoint_list) - 1):  # 绘制路径
-            debugger.draw_line(
-                package, waypoint_list[i][0], waypoint_list[i][1], waypoint_list[i + 1][0], waypoint_list[i + 1][1])
+            debugger.draw_line(package, waypoint_list[i][0], waypoint_list[i][1],
+                               waypoint_list[i + 1][0], waypoint_list[i + 1][1], Debug_Msg.GREEN)
 
         debugger.send(package)
 
