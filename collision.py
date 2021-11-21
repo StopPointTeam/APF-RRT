@@ -7,8 +7,8 @@ class Collision:
         self.vision = vision
         self.obs_robot = self.vision.yellow_robot
 
-        self.my_r = 80
-        self.obs_r = 80
+        self.my_r = 100
+        self.obs_r = 100
 
     def set_para(self, my_r=None, obs_r=None) -> None:
         if my_r is None:
@@ -16,7 +16,13 @@ class Collision:
         if obs_r is None:
             self.obs_r = obs_r
 
-    def is_collided_check_single(self, line_x1: float, line_y1: float, line_x2: float, line_y2: float, obs_x: float, obs_y: float) -> bool:
+    def is_collided_check_single(self,
+                                 line_x1: float,
+                                 line_y1: float,
+                                 line_x2: float,
+                                 line_y2: float,
+                                 obs_x: float,
+                                 obs_y: float) -> bool:
         cross = (line_x2 - line_x1) * (obs_x - line_x1) + \
             (line_y2 - line_y1) * (obs_y - line_y1)
         if cross <= 0:
@@ -37,10 +43,16 @@ class Collision:
         else:
             return False
 
-    def is_collided_check_all(self, line_x1: float, line_y1: float, line_x2: float, line_y2: float) -> bool:
+    def is_collided_check_all(self,
+                              line_x1: float,
+                              line_y1: float,
+                              line_x2: float,
+                              line_y2: float) -> bool:
         is_collided = False
         for bot in self.obs_robot:
-            if self.is_collided_check_single(line_x1, line_y1, line_x2, line_y2, bot.x, bot.y) == True:
+            if self.is_collided_check_single(line_x1, line_y1,
+                                             line_x2, line_y2,
+                                             bot.x, bot.y) == True:
                 is_collided = True
                 break
 
