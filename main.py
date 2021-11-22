@@ -13,6 +13,7 @@ import time
 def draw_waypoint(waypoint_list: list,
                   collision: Collision,
                   debugger: Debugger,
+                  package,
                   good_way_color=Debug_Msg.GREEN,
                   bad_way_color=Debug_Msg.RED):
     for i in range(len(waypoint_list) - 1):
@@ -45,11 +46,12 @@ if __name__ == '__main__':
 
         # 规划路径
         waypoint_list = planner.plan(-2400, -1500)
-        draw_waypoint(waypoint_list, collision, debugger, good_way_color=Debug_Msg.YELLOW)
+        draw_waypoint(waypoint_list, collision, debugger,
+                      package, good_way_color=Debug_Msg.YELLOW)
 
         # 化简路径
         waypoint_list = simplifier.simplify(waypoint_list)
-        draw_waypoint(waypoint_list, collision, debugger)
+        draw_waypoint(waypoint_list, collision, debugger, package)
 
         debugger.draw_circle(package, 2400, 1500, 100)  # 绘制起点
         debugger.draw_circle(package, -2400, -1500, 100)  # 绘制终点
