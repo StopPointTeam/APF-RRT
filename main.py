@@ -1,14 +1,14 @@
+import time
+
 from vision import Vision
 from action import Action
 from debug import Debugger
-from move import Move
 from zss_debug_pb2 import Debug_Msgs, Debug_Msg
 
 from apf import APF
 from collision import Collision
 from simplifier import Simplifier
-
-import time
+from move import Move
 
 
 def draw_waypoint(waypoint_list: list,
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     # 规划路径
     waypoint_list = planner.plan(-2400, -1500)
     draw_waypoint(waypoint_list, collision, debugger,
-                      package, good_way_color=Debug_Msg.YELLOW)
+                  package, good_way_color=Debug_Msg.YELLOW)
 
     # 化简路径
     waypoint_list = simplifier.simplify(waypoint_list)
@@ -58,45 +58,12 @@ if __name__ == '__main__':
 
     debugger.send(package)
 
-    move=Move(vision,waypoint_list)
+    # 轨迹规划
+    move = Move(vision, waypoint_list)
     while True:
-        vx,vw,flag=move.move_plan()
+        vx, vw, flag = move.move_plan()
         if flag:
             action.sendCommand(vx=0, vy=0, vw=0)
             break
         action.sendCommand(vx=vx, vy=0, vw=vw)
         time.sleep(0.02)
-
-
-
-
-    
-
-
-
-    # while True:
-    #     package = Debug_Msgs()
-
-    #     planner = APF(vision)
-    #     planner.set_para(time_limit=200)
-
-    #     # 规划路径
-    #     waypoint_list = planner.plan(-2400, -1500)
-    #     draw_waypoint(waypoint_list, collision, debugger,
-    #                   package, good_way_color=Debug_Msg.YELLOW)
-
-    #     # 化简路径
-    #     waypoint_list = simplifier.simplify(waypoint_list)
-    #     draw_waypoint(waypoint_list, collision, debugger, package)
-
-    #     debugger.draw_circle(package, 2400, 1500, 100)  # 绘制起点
-    #     debugger.draw_circle(package, -2400, -1500, 100)  # 绘制终点
-
-    #     debugger.send(package)
-
-    #     action.sendCommand(vx=100, vy=0, vw=0)
-    # orientation=vision.my_robot.orientation
-    # action.sendCommand(vx=0, vy=0, vw=0.5)
-    # while True:
-    #     print(orientation)
-
