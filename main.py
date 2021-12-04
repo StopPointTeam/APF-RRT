@@ -68,7 +68,7 @@ if __name__ == '__main__':
         debugger.send(package)
 
         # 轨迹规划
-        move = Move(vision, waypoint_list, 0, 0)
+        move = Move(vision, waypoint_list, 0, 0, turn = i)
         action.sendCommand(vx=0, vy=0, vw=0)
 
         
@@ -93,7 +93,7 @@ if __name__ == '__main__':
                 waypoint_list = simplifier.simplify(waypoint_list)
                 draw_waypoint(waypoint_list, collision, debugger, package)
 
-                move = Move(vision, waypoint_list, cur_vx, cur_vw)
+                move = Move(vision, waypoint_list, cur_vx, cur_vw, turn = i)
 
                 debugger.draw_circle(package, 2400, 1500, 100)  # 绘制起点
                 debugger.draw_circle(package, -2400, -1500, 100)  # 绘制终点

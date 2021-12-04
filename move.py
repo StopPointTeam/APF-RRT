@@ -7,12 +7,13 @@ MAX_VX = 3000
 MAX_AX = 3000
 MAX_VW = 5
 MAX_AW = 5
-ACC = 0
-DEC = 1
+ACC = 0 #加速
+DEC = 1 #减速
 
 
 class Move:
-    def __init__(self, vision: Vision, waypoint: list, vx, vw) -> None:
+    def __init__(self, vision: Vision, waypoint: list, vx, vw, turn) -> None:
+        self.turn = turn
         self.vision = vision
         self.my_robot = self.vision.my_robot
 
@@ -80,7 +81,12 @@ class Move:
                                             self.waypoint[self.cur_waypoint + 1][0],
                                             self.waypoint[self.cur_waypoint + 1][1])
 
-        theta = self.orientation = self.my_robot.orientation
+        self.orientation = self.my_robot.orientation
+        if self.turn % 2 == 1:
+            self.orientation = self.orientation + math.pi
+            if self.orientation > math.pi:
+                self.orientation = self.orientation -2 * math.pi
+        theta = self.orientation
         beta = self._point_arccos(self.cur_x, self.cur_y,
                                   self.waypoint[self.cur_waypoint+1][0],
                                   self.waypoint[self.cur_waypoint+1][1])
@@ -123,6 +129,9 @@ class Move:
         elif vx > vx_max:
             vx = vx_max 
         self.cur_vx = vx
+
+        if self.turn % 2 == 1:
+            vx = -1 * vx 
 
         # vw规划
         if alpha < math.pi/2 and alpha > -math.pi/2:
