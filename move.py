@@ -3,17 +3,19 @@ from datetime import datetime
 from vision import Vision
 
 
-MAX_VX = 3000
+MAX_VX = 2000
 MAX_AX = 3000
 MAX_VW = 5
 MAX_AW = 5
 ACC = 0 #加速
 DEC = 1 #减速
+FOWWARD = 0
+BACKWORD = 1
 
 
 class Move:
-    def __init__(self, vision: Vision, waypoint: list, vx, vw, turn) -> None:
-        self.turn = turn
+    def __init__(self, vision: Vision, waypoint: list, vx, vw) -> None:
+        self.direction = FOWWARD
         self.vision = vision
         self.my_robot = self.vision.my_robot
 
@@ -76,13 +78,13 @@ class Move:
                                                     self.waypoint[self.cur_waypoint][1])
                 
 
-        way_distance = self._point_distance(self.waypoint[self.cur_waypoint][0],
-                                            self.waypoint[self.cur_waypoint][1],
-                                            self.waypoint[self.cur_waypoint + 1][0],
-                                            self.waypoint[self.cur_waypoint + 1][1])
+        # way_distance = self._point_distance(self.waypoint[self.cur_waypoint][0],
+        #                                     self.waypoint[self.cur_waypoint][1],
+        #                                     self.waypoint[self.cur_waypoint + 1][0],
+        #                                     self.waypoint[self.cur_waypoint + 1][1])
 
         self.orientation = self.my_robot.orientation
-        if self.turn % 2 == 1:
+        if self.direction == BACKWORD:
             self.orientation = self.orientation + math.pi
             if self.orientation > math.pi:
                 self.orientation = self.orientation -2 * math.pi
@@ -101,6 +103,13 @@ class Move:
         elif alpha > math.pi:
             alpha = alpha - 2 * math.pi
         
+        if alpha > math.pi / 2:
+            alpha = alpha - math.pi
+            self.direction = 1 - self.direction
+        elif alpha < - math.pi / 2:
+            alpha = alpha + math.pi
+            self.direction = 1 - self.direction
+        
         delta_t = (datetime.now() - self.cur_time).microseconds * 0.000001
         self.cur_time = datetime.now()
 
@@ -110,7 +119,7 @@ class Move:
 
         # vx规划
         if self.cur_status == ACC:
-            if self.cur_vx - self.next_point_speed >= self.k1 * next_distance:
+            if abs(self.cur_vx) - self.next_point_speed >= self.k1 * next_distance:
                 self.cur_status = DEC
                 vx = self.next_point_speed + self.k1 * next_distance
             else:
@@ -123,6 +132,9 @@ class Move:
         
         # 限制vx范围
         vx = self.limit_vx_for_alpha(vx, alpha)
+        if self.direction == BACKWORD:
+            vx = -1 * vx
+    
         vx_min,vx_max = self._vx_space(delta_t)
         if vx < vx_min:
             vx = vx_min
@@ -130,8 +142,6 @@ class Move:
             vx = vx_max 
         self.cur_vx = vx
 
-        if self.turn % 2 == 1:
-            vx = -1 * vx 
 
         # vw规划
         if alpha < math.pi/2 and alpha > -math.pi/2:
@@ -176,7 +186,7 @@ class Move:
 
     def _vx_space(self, delta_t: float) -> tuple:
         vx_max = min(MAX_VX, self.cur_vx+delta_t*MAX_AX)
-        vx_min = max(0, self.cur_vx-delta_t*MAX_AX)
+        vx_min = max(-MAX_VX, self.cur_vx-delta_t*MAX_AX)
         return vx_min, vx_max
 
     def _vw_space(self, delta_t: float) -> tuple:

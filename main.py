@@ -68,15 +68,16 @@ if __name__ == '__main__':
         debugger.send(package)
 
         # 轨迹规划
-        move = Move(vision, waypoint_list, 0, 0, turn = i)
+        move = Move(vision, waypoint_list, 0, 0)
         action.sendCommand(vx=0, vy=0, vw=0)
 
         
         flag = 0
         while flag == 0:
             cur_location = move.get_location()
-            is_collided = collision.is_collided_check_all(waypoint_list[cur_location][0],
-                                                        waypoint_list[cur_location][1],
+            cur_x = vision.my_robot.x
+            cur_y = vision.my_robot.y
+            is_collided = collision.is_collided_check_all(cur_x, cur_y,
                                                         waypoint_list[cur_location+1][0],
                                                         waypoint_list[cur_location+1][1])
             if is_collided == True:
@@ -93,7 +94,7 @@ if __name__ == '__main__':
                 waypoint_list = simplifier.simplify(waypoint_list)
                 draw_waypoint(waypoint_list, collision, debugger, package)
 
-                move = Move(vision, waypoint_list, cur_vx, cur_vw, turn = i)
+                move = Move(vision, waypoint_list, cur_vx, cur_vw)
 
                 debugger.draw_circle(package, 2400, 1500, 100)  # 绘制起点
                 debugger.draw_circle(package, -2400, -1500, 100)  # 绘制终点
